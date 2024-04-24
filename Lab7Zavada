@@ -1,0 +1,161 @@
+// LaboratoryProject7.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <iostream>
+#include <limits.h>
+using namespace std;
+
+// Прототип Констант
+const int MaxM = 20, MaxN = 20;
+
+// Прототип Змінних
+int MinFromMax;
+int menu; // меню
+int realM; // реальні розміри матриці
+int realN; // реальні розміри матриці
+int matr1[MaxM][MaxN]; // оголошення матриці
+
+// Прототипи Функцій
+void get_matr(int  in_matr[MaxM][MaxN], int& in_m, int& in_n);
+void show_matr(int out_matr[MaxM][MaxN], int n, int m);
+void task1(void);
+void task2(void);
+int MaxFromColumn(int  in_matr[MaxM][MaxN], int column);
+bool PositiveOnlyColumn(int  in_matr[MaxM][MaxN], int column);
+
+int MaxFromColumn(int  in_matr[MaxM][MaxN], int column) // Функція знаходження максимального з колонки
+{
+	int max = in_matr[0][column];
+	for (int rowNumber = 0; rowNumber < realM; rowNumber++)
+	{
+		if (in_matr[rowNumber][column] > max)
+		{
+			max = in_matr[rowNumber][column];
+		}
+	}
+	return max;
+}
+
+bool PositiveOnlyColumn(int  in_matr[MaxM][MaxN], int column) // Функція перевірки на тільки позитивні числа
+{
+	bool allPositiveColumn = true;
+	for (int rowNumber = 0; rowNumber < realM; rowNumber++)
+	{
+		if (in_matr[rowNumber][column] < 1)
+		{
+			allPositiveColumn = false;
+		}
+	}
+	return allPositiveColumn;
+}
+
+
+
+// функція введення матриці
+//void get_matr(float in_matr[M][N], int& in_m, int& in_n) {
+void get_matr(int  in_matr[MaxM][MaxN], int& in_m, int& in_n) {
+	do
+	{
+		cout << "Enter rows count (2-20): ";
+		cin >> in_m;
+		cout << "Enter columns count (2-20): ";
+		cin >> in_n;
+	}
+	// доки некоректні вхід.дані
+	while (in_n < 2 || in_n > MaxN || in_m <2 || in_m > MaxM );
+	cout << "Enter elements: " << endl;
+	for (int i = 0; i < in_m; i++)
+	{
+		for (int j = 0; j < in_n; j++)
+		{
+			cin >> in_matr[i][j];
+		}
+	}		
+}
+
+// функція виведення масиву
+//void show_matr(float out_matr[M][N], const int m, const int n) {
+void show_matr(int out_matr[MaxM][MaxN], int m, int n) {
+	cout << endl << "Matrix: " << endl;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++)
+			cout << out_matr[i][j] << "\t";
+		cout << endl;
+	}
+}
+
+/*int task1_equat(const int out_matr[M][N], const int m, const int n)
+{
+
+}*/
+
+
+
+void task1() // Функція Першого Завдання
+{
+	MinFromMax = MaxFromColumn(matr1, 0);
+	int minColumn;
+	for (int columnCounter = 0; columnCounter < realN; columnCounter++) // Ц
+	{
+		minColumn = MaxFromColumn(matr1, columnCounter);
+		if (MinFromMax > minColumn)
+		{
+			MinFromMax = minColumn;
+		}
+	}
+	cout << "Minimum From Maximum:" << MinFromMax;
+}
+
+void task2() // Функція Другого Завдання
+{
+	int resultColumnCounter = 0;
+	bool isPositive;
+	for (int columnCounter = 0; columnCounter < realN; columnCounter++) // Цикл видалення колонок
+	{
+		isPositive = PositiveOnlyColumn(matr1, columnCounter);
+		if (isPositive != true)
+		{
+			for (int rowCounter = 0; rowCounter < realM; rowCounter++)
+			{
+				matr1[rowCounter][resultColumnCounter] = matr1[rowCounter][columnCounter];
+			}
+			resultColumnCounter++;
+		}
+	}
+	realN = resultColumnCounter;
+	show_matr(matr1, realM, realN);
+	
+}
+
+
+
+int main()
+{
+	//int menu;
+	//float matr1[M][N]; // оголошення матриці
+	//while (true)
+	{
+		get_matr(matr1, realM, realN);// виклик функції введення
+		show_matr(matr1, realM, realN);// виклик функції виведення
+
+		cout << "Choose task:1,2: ";
+		cin >> menu;
+		switch (menu)
+		{ // перемикання між завданнями
+		case 1:
+		{
+			task1(); break; // Завдання 1
+		}
+		case 2:
+		{
+			task2(); break; // Завдання 2
+		}
+		default: cout << "Wrong task! (Only 1,2)" << endl; //повідомлення про помилку
+		}
+		system("pause");
+
+	}
+	return 0;
+}
+
+
